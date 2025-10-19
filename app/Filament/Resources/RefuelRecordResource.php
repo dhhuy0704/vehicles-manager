@@ -17,6 +17,8 @@ class RefuelRecordResource extends Resource
 {
     protected static ?string $model = RefuelRecord::class;
 
+    protected static ?string $navigationGroup = 'Vehicle Management';
+
     protected static ?string $navigationIcon = 'heroicon-o-beaker';
 
     public static function form(Form $form): Form
@@ -55,6 +57,16 @@ class RefuelRecordResource extends Resource
                     ->numeric()
                     ->prefix('$')
                     ->step(0.01),
+
+                Forms\Components\Select::make('gas_station_id')
+                    ->relationship('gasStation', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
             ]);
     }
 
@@ -86,6 +98,10 @@ class RefuelRecordResource extends Resource
 
                 Tables\Columns\TextColumn::make('total_cost')
                     ->money('USD')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('gasStation.name')
+                    ->label('Gas Station')
                     ->sortable(),
             ])
             ->defaultSort('date', 'desc')

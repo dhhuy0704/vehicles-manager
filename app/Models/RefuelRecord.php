@@ -16,6 +16,7 @@ class RefuelRecord extends Model
         'unit_price',
         'total_cost',
         'litres',
+        'gas_station_id',
     ];
 
     protected $casts = [
@@ -26,4 +27,9 @@ class RefuelRecord extends Model
         'total_cost' => 'decimal:2',
         'litres' => 'decimal:2',
     ];
+
+    public function gasStation()
+    {
+        return $this->belongsTo(GasStation::class);
+    }
 }
