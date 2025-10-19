@@ -29,13 +29,19 @@ class GasStationResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('lat')
-                    ->required()
                     ->numeric()
-                    ->label('Latitude'),
+                    ->label('Latitude')
+                    ->placeholder('Enter latitude (optional)')
+                    ->hint('Decimal format (e.g., 10.123456)')
+                    ->maxValue(90)
+                    ->minValue(-90),
                 Forms\Components\TextInput::make('long')
-                    ->required()
                     ->numeric()
-                    ->label('Longitude'),
+                    ->label('Longitude')
+                    ->placeholder('Enter longitude (optional)')
+                    ->hint('Decimal format (e.g., 106.123456)')
+                    ->maxValue(180)
+                    ->minValue(-180),
             ]);
     }
 
@@ -49,10 +55,12 @@ class GasStationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('lat')
                     ->label('Latitude')
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 6) : '-'),
                 Tables\Columns\TextColumn::make('long')
                     ->label('Longitude')
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 6) : '-'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

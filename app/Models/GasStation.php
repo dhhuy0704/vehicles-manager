@@ -17,7 +17,12 @@ class GasStation extends Model
     ];
 
     protected $casts = [
-        'lat' => 'float',
-        'long' => 'float',
+        'lat' => 'float:8',
+        'long' => 'float:8',
+    ];
+
+    protected $attributes = [
+        'lat' => null,
+        'long' => null,
     ];
 }
