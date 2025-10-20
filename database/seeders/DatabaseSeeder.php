@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
 
         // Create owner
         $owner = Owner::create([
-            'first_name' => 'Tommy',
-            'last_name'  => 'Do',
-            'email'      => 'tommy@do.com',
+            'first_name' => 'John',
+            'last_name'  => 'Doe',
+            'email'      => 'john@example.ca',
             'phone'      => '123-456-7890',
             'gender'     => 'male'
         ]);
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'manufacturer'  => 'toyota',
             'model'         => 'Siena',
             'year'          => 2019,
-            'fuel_capacity' => 45.0,
+            'fuel_capacity' => 75.0,
             'status'        => 'active',
             'note'          => 'This is my primary vehicle.',
             'owner_id'      => $owner->id,
