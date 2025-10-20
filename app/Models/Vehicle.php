@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     protected $fillable = [
+        'owner_id',
         'type',
         'name',
         'manufacturer',
@@ -17,16 +18,21 @@ class Vehicle extends Model
         'note',
     ];
 
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
+
     const TYPES = [
-        'car' => 'Car',
-        'truck' => 'Truck',
-        'van' => 'Van',
+        'car'    => 'Car',
+        'truck'  => 'Truck',
+        'van'    => 'Van',
         'camper' => 'Camper',
     ];
 
     const STATUSES = [
         'active' => 'Active',
         'broken' => 'Broken',
-        'sold' => 'Sold',
+        'sold'   => 'Sold',
     ];
 }

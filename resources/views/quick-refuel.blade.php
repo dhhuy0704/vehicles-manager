@@ -65,17 +65,21 @@
                     <div>
                         <label for="odometer" class="block text-sm font-medium text-gray-700">Odometer Reading</label>
                         <input type="number" id="odometer" name="odometer" required 
-                            value="{{ $defaultValues['odometer'] }}"
+                            value="{{ (int)$defaultValues['odometer'] }}"
+                            step="1"
+                            min="0"
+                            onchange="this.value = Math.round(this.value)"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                            placeholder="Current odometer reading">
+                            placeholder="Enter whole number">
                     </div>
 
                     <div>
                         <label for="price_per_unit" class="block text-sm font-medium text-gray-700">Price/Unit</label>
                         <input type="number" id="price_per_unit" name="price_per_unit" required 
+                            step="0.001"
                             value="{{ $defaultValues['price_per_unit'] }}"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                            placeholder="0.00">
+                            placeholder="0.000">
                     </div>
 
                     <div>
@@ -87,9 +91,9 @@
 
                     <div>
                         <label for="total_cost" class="block text-sm font-medium text-gray-700">Total Cost</label>
-                        <input type="number" step="0.01" id="total_cost" name="total_cost"
+                        <input type="number" step="0.001" id="total_cost" name="total_cost"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                            placeholder="0.00">
+                            placeholder="0.000">
                     </div>
                 </div>
 
@@ -221,9 +225,46 @@
                 }
             });
 
-            // Add input event listeners for real-time calculations
-            ['amount', 'price_per_unit', 'total_cost'].forEach(fieldId => {
-                document.getElementById(fieldId).addEventListener('input', function() {
+            // Format numeric input with specified decimal places
+            function formatNumericInput(value, decimals) {
+                // Remove any non-digit characters
+                const numericValue = value.replace(/[^\d]/g, '');
+                
+                if (numericValue.length > 0) {
+                    // Convert to number and divide by 10^decimals to get proper decimal places
+                    const divisor = Math.pow(10, decimals);
+                    const formattedValue = (parseInt(numericValue) / divisor).toFixed(decimals);
+                    return formattedValue;
+                }
+                return value;
+            }
+
+            // Apply formatting to an input field
+            function applyInputFormatting(input, decimals) {
+                const cursorPosition = input.selectionStart;
+                const originalLength = input.value.length;
+                
+                const formattedValue = formatNumericInput(input.value, decimals);
+                input.value = formattedValue;
+                
+                // Adjust cursor position after formatting
+                if (cursorPosition < originalLength) {
+                    input.setSelectionRange(cursorPosition, cursorPosition);
+                }
+            }
+
+            // Special handler for numeric inputs
+            const inputFormats = {
+                'price_per_unit': 3, // 3 decimal places
+                'amount': 2,         // 2 decimal places
+                'total_cost': 3      // 3 decimal places
+            };
+
+            // Add input event listeners with formatting
+            Object.entries(inputFormats).forEach(([fieldId, decimals]) => {
+                const input = document.getElementById(fieldId);
+                input.addEventListener('input', function(e) {
+                    applyInputFormatting(this, decimals);
                     updateFormValues(fieldId);
                 });
             });

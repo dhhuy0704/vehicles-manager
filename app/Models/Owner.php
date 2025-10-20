@@ -18,12 +18,17 @@ class Owner extends Model
         'gender',
     ];
 
-    protected $casts = [
-        'gender' => 'string',
-    ];
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 
-    public function getFullNameAttribute(): string
+    public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    protected $casts = [
+        'gender' => 'string',
+    ];
 }

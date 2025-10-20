@@ -26,6 +26,36 @@ class VehicleResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('owner_id')
+                    ->relationship('owner', 'first_name')
+                    ->searchable(['first_name', 'last_name', 'email'])
+                    ->preload()
+                    ->required()
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('first_name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('last_name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('phone')
+                            ->tel()
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\Select::make('gender')
+                            ->options([
+                                'male' => 'Male',
+                                'female' => 'Female',
+                                'other' => 'Other',
+                            ])
+                            ->required(),
+                    ])
+                    ->columnSpanFull(),
+                    
                 Forms\Components\Select::make('type')
                     ->options(Vehicle::TYPES)
                     ->required(),
@@ -61,6 +91,10 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('owner.full_name')
+                    ->searchable(['first_name', 'last_name'])
+                    ->sortable()
+                    ->label('Owner'),
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
