@@ -33,11 +33,24 @@ class QuickRefuelController extends Controller
             'vehicle_id'     => 'required|exists:vehicles,id',
             'gas_station_id' => 'required|exists:gas_stations,id',
             'date'           => 'required|date',
+            'time'           => 'required',
             'amount'         => 'required|numeric|min:0',
             'price_per_unit' => 'required|numeric',
             'odometer'       => 'required|numeric|min:0',
             'total_cost'     => 'required|numeric|min:0',
         ]);
+
+        // Convert local time to UTC
+        $userTz = config('app.display_timezone', 'UTC');
+        $dateTime = \Carbon\Carbon::createFromFormat(
+            'Y-m-d H:i',
+            $validated['date'] . ' ' . $validated['time'],
+            $userTz
+        );
+        $utcDateTime = $dateTime->setTimezone('UTC');
+
+        $validated['date'] = $utcDateTime->format('Y-m-d');
+        $validated['time'] = $utcDateTime->format('H:i:s');
 
         RefuelRecord::create($validated);
 

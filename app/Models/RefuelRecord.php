@@ -21,16 +21,28 @@ class RefuelRecord extends Model
     ];
 
     protected $casts = [
-        'date'       => 'date',
-        'time'       => 'datetime',
-        'odometer'   => 'decimal:2',
-        'unit_price' => 'decimal:2',
-        'total_cost' => 'decimal:2',
-        'litres'     => 'decimal:2',
+        'date'          => 'date',
+        'odometer'      => 'integer',
+        'price_per_unit'=> 'decimal:3',
+        'total_cost'    => 'decimal:3',
+        'amount'        => 'decimal:2',
     ];
+
+    public function getFormattedTimeAttribute()
+    {
+        if (!$this->time) return null;
+        
+        $utcTime = \Carbon\Carbon::createFromFormat('H:i:s', $this->time, 'UTC');
+        return $utcTime->setTimezone(config('app.display_timezone', 'UTC'))->format('H:i');
+    }
 
     public function gasStation()
     {
         return $this->belongsTo(GasStation::class);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 }

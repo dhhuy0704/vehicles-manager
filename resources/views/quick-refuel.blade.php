@@ -51,6 +51,13 @@
                     </div>
 
                     <div>
+                        <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
+                        <input type="time" id="time" name="time" required 
+                            value="{{ now()->setTimezone(config('app.display_timezone', 'UTC'))->format('H:i') }}"
+                            class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+
+                    <div>
                         <label for="gas_station_id" class="block text-sm font-medium text-gray-700">Gas Station</label>
                         <select id="gas_station_id" name="gas_station_id" required class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500">
                             <option value="">Select a gas station</option>

@@ -34,19 +34,32 @@ class RefuelRecordResource extends Resource
                     ->default(now())
                     ->seconds(false),
 
+                Forms\Components\Select::make('vehicle_id')
+                    ->relationship('vehicle', 'model')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+
+                Forms\Components\Select::make('gas_station_id')
+                    ->relationship('gasStation', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+
                 Forms\Components\TextInput::make('odometer')
                     ->required()
                     ->numeric()
                     ->suffix('km')
-                    ->step(0.01),
+                    ->step(1)
+                    ->minValue(0),
 
-                Forms\Components\TextInput::make('unit_price')
+                Forms\Components\TextInput::make('price_per_unit')
                     ->required()
                     ->numeric()
                     ->prefix('$')
-                    ->step(0.01),
+                    ->step(0.001),
 
-                Forms\Components\TextInput::make('litres')
+                Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric()
                     ->suffix('L')
@@ -56,17 +69,7 @@ class RefuelRecordResource extends Resource
                     ->required()
                     ->numeric()
                     ->prefix('$')
-                    ->step(0.01),
-
-                Forms\Components\Select::make('gas_station_id')
-                    ->relationship('gasStation', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
-                    ]),
+                    ->step(0.001),
             ]);
     }
 
@@ -76,32 +79,41 @@ class RefuelRecordResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('date')
                     ->date()
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('formatted_time')
+                    ->label('Time')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('time')
-                    ->time()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.model')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('gasStation.name')
+                    ->sortable()
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('odometer')
-                    ->numeric(2)
+                    ->numeric()
                     ->suffix('km')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('unit_price')
-                    ->money('USD')
+                Tables\Columns\TextColumn::make('price_per_unit')
+                    ->money()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('litres')
-                    ->numeric(2)
+                Tables\Columns\TextColumn::make('amount')
+                    ->numeric(
+                        decimalPlaces: 2,
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                    )
                     ->suffix('L')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('total_cost')
-                    ->money('USD')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('gasStation.name')
-                    ->label('Gas Station')
+                    ->money()
                     ->sortable(),
             ])
             ->defaultSort('date', 'desc')
