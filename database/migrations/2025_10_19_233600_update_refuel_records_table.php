@@ -14,7 +14,7 @@ return new class extends Migration
     {
         // First add the column without constraint
         Schema::table('refuel_records', function (Blueprint $table) {
-            $table->unsignedBigInteger('vehicle_id')->after('id')->nullable();
+            $table->uuid('vehicle_id')->after('id')->nullable();
         });
 
         // Get the first vehicle id (or a default one)
@@ -31,7 +31,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             // Make vehicle_id required after setting default value
-            $table->unsignedBigInteger('vehicle_id')->nullable(false)->change();
+            $table->uuid('vehicle_id')->nullable(false)->change();
 
             // Make time field nullable
             $table->time('time')->nullable()->change();

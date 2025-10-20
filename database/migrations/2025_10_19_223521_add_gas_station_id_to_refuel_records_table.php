@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('refuel_records', function (Blueprint $table) {
-            $table->foreignId('gas_station_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignUuid('gas_station_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 

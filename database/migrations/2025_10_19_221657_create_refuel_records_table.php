@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('refuel_records', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->date('date');
             $table->time('time');
             $table->unsignedBigInteger('odometer');
