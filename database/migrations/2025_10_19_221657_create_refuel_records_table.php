@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->time('time');
-            $table->decimal('odometer', 10, 2);
-            $table->decimal('unit_price', 8, 2);
-            $table->decimal('total_cost', 10, 2);
+            $table->unsignedBigInteger('odometer');
+            $table->decimal('unit_price', 8, 3);
+            $table->decimal('total_cost', 10, 3);
             $table->decimal('litres', 8, 2);
             $table->timestamps();
         });
