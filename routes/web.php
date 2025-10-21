@@ -66,5 +66,27 @@ Route::get('/debug-livewire', function() {
     ]);
 });
 
+// Test raw authentication
+Route::post('/test-auth', function(\Illuminate\Http\Request $request) {
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (\Illuminate\Support\Facades\Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        return response()->json([
+            'success' => true,
+            'user' => \Illuminate\Support\Facades\Auth::user(),
+            'session_id' => session()->getId()
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Invalid credentials'
+    ], 401);
+});
+
 Route::get('/', [QuickRefuelController::class, 'create'])->name('quick-refuel');
 Route::post('/quick-refuel', [QuickRefuelController::class, 'store'])->name('quick-refuel.store');
