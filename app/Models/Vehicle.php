@@ -38,4 +38,10 @@ class Vehicle extends Model
         'broken' => 'Broken',
         'sold'   => 'Sold',
     ];
+
+    public function getVehicleLabelAttribute()
+    {
+        $manufacturer = ucfirst($this->manufacturer);
+        return "{$this->name} - {$manufacturer} {$this->model} ({$this->year})";
+    }
 }
