@@ -7,11 +7,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ChangePassword extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-key';
+    protected static ?string $navigationGroup = 'Account Settings';
     protected static ?string $navigationLabel = 'Change Password';
     protected static ?string $title = 'Change Password';
     protected static ?string $slug = 'change-password';
@@ -54,8 +57,7 @@ class ChangePassword extends Page
     public function submit(): void
     {
         $data = $this->form->getState();
-
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Verify current password
         if (! Hash::check($data['current_password'], $user->password)) {
@@ -68,9 +70,9 @@ class ChangePassword extends Page
         }
 
         // Update password
-        $user->update([
-            'password' => Hash::make($data['new_password']),
-        ]);
+        DB::table('users')
+            ->where('id', Auth::id())
+            ->update(['password' => Hash::make($data['new_password'])]);
 
         // Clear form
         $this->form->fill();
