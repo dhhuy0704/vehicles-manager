@@ -70,21 +70,28 @@
                     </div>
 
                     <div>
-                        <label for="odometer" class="block text-sm font-medium text-gray-700">Odometer Reading</label>
+                        <label for="odometer" class="block text-sm font-medium text-gray-700">Odometer Reading
+                        <small>(Last: {{ (int)$defaultValues['odometer'] }})</small></label>
                         <input type="number" id="odometer" name="odometer" required 
-                            value="{{ (int)$defaultValues['odometer'] }}"
-                            step="1"
+                            value=""
+                            step="100"
                             min="0"
                             onchange="this.value = Math.round(this.value)"
-                            class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                            placeholder="Enter whole number">
+                            class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500">
                     </div>
 
                     <div>
                         <label for="price_per_unit" class="block text-sm font-medium text-gray-700">Price/Unit</label>
                         <input type="number" id="price_per_unit" name="price_per_unit" required 
-                            step="0.001"
+                            step="0.100"
                             value="{{ $defaultValues['price_per_unit'] }}"
+                            class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                            placeholder="0.000">
+                    </div>
+
+                    <div>
+                        <label for="total_cost" class="block text-sm font-medium text-gray-700">Total Cost</label>
+                        <input type="number" step="0.001" id="total_cost" name="total_cost"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                             placeholder="0.000">
                     </div>
@@ -95,13 +102,6 @@
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                             placeholder="0.00">
                     </div>
-
-                    <div>
-                        <label for="total_cost" class="block text-sm font-medium text-gray-700">Total Cost</label>
-                        <input type="number" step="0.001" id="total_cost" name="total_cost"
-                            class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                            placeholder="0.000">
-                    </div>
                 </div>
 
                 <div class="mt-8">
@@ -111,6 +111,9 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="pt-10 pb-10 flex items-center justify-center">
+        <p>© 2025 All Rights Reserved By <a href="https://tommydo.ca" style="text-decoration: underline;">TommyDo.ca</a> - v{{ config('app.version') }}</p>
     </div>
 
     <script>
@@ -262,9 +265,9 @@
 
             // Special handler for numeric inputs
             const inputFormats = {
-                'price_per_unit': 3, // 3 decimal places
-                'amount': 2,         // 2 decimal places
-                'total_cost': 3      // 3 decimal places
+                'price_per_unit': 3,
+                'amount': 2,
+                'total_cost': 2
             };
 
             // Add input event listeners with formatting
@@ -282,6 +285,14 @@
             if (defaultPricePerUnit && defaultAmount) {
                 updateFormValues('amount');
             }
+
+            // Select value when focus
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.select();
+                });
+            });
+
         });
     </script>
 </body>
