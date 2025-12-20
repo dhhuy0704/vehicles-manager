@@ -38,7 +38,7 @@
                     </div>
                 @endif
             </div>
-            <form id="refuelForm" class="mt-8 flex flex-col h-full" action="{{ route('quick-refuel.store') }}" method="POST">
+            <form id="refuelForm" class="mt-8 flex flex-col h-full" action="{{ route('quick-refuel.store') }}" method="POST" novalidate>
                 @csrf
                 <input type="hidden" id="vehicle_id" name="vehicle_id" required>
                 
